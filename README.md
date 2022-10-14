@@ -43,15 +43,16 @@ generate_client
 `docker-compose up`
 
 ### Change/Set Password for mosquitto
-`docker ps
-docker exec -it [CONTAINER-ID]  sh`
+```
+docker ps
+docker exec -it [CONTAINER-ID]  sh
 
-`#s/> mosquitto_passwd -b [PASSWORDFILE] [USER] [PASSWORD]
-#s/> mosquitto_passwd -b mosquitto.passwd phpuser xxxxxxxx
-#s/> exit`
+#s/> mosquitto_passwd -b [PASSWORDFILE] [USER] [PASSWORD]
+#s/> mosquitto_passwd -b mosquitto.passwd SOMEUSER xxxxxxxx
+#s/> exit
 
-`docker-compose down
-docker-compose up`
+docker-compose up
+```
 
 
 ### Structure of MQTT Messages and Paths
