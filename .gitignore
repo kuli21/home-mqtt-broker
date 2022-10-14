@@ -1,0 +1,10 @@
+.DS_Store
+.idea
+mosquitto/config/certs/*
+!mosquitto/config/certs/.gitkeep
+mosquitto/certs/*
+!mosquitto/config/certs/generate-certs.sh
+mosquitto/config/mosquitto.passwd
+mosquitto/data/mosquitto.db
+mosquitto/log/mosquitto.log
+.env
