@@ -3,6 +3,39 @@
 ### Generate your keys (File needs some adjustments for DOMAIN, FILEPATH)
 `./mosquitto/certs/generate-certs.sh`
 
+```
+#!/bin/bash
+
+#Create this script (generate-certs.sh) - change IP Adress and generate keys
+
+IP="192.168.1.22"
+SUBJECT_CA="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=CA/CN=$IP"
+SUBJECT_SERVER="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=Server/CN=$IP"
+SUBJECT_CLIENT="/C=SE/ST=Stockholm/L=Stockholm/O=himinds/OU=Client/CN=$IP"
+
+functiongenerate_CA() {
+   echo"$SUBJECT_CA"
+   openssl req -x509 -nodes -sha256 -newkey rsa:2048 -subj "$SUBJECT_CA"-days 365 -keyout ca.key -out ca.crt
+}
+
+functiongenerate_server() {
+   echo"$SUBJECT_SERVER"
+   openssl req -nodes -sha256 -new -subj "$SUBJECT_SERVER"-keyout server.key -out server.csr
+   openssl x509 -req -sha256 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365
+}
+
+functiongenerate_client() {
+   echo"$SUBJECT_CLIENT"
+   openssl req -new -nodes -sha256 -subj "$SUBJECT_CLIENT"-out client.csr -keyout client.key 
+   openssl x509 -req -sha256 -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 365
+}
+
+generate_CA
+generate_server
+generate_client
+```
+
+
 ### Create mosquitto password file
 `touch mosquitto/config/mosquitto.passwd`
 
@@ -55,24 +88,8 @@ INFLUXDB_INIT_PASSWORD=xxxxxxxxxxxxxxxxxxxxxx
 INFLUXDB_INIT_ORG=fmi
 INFLUXDB_INIT_BUCKET=fmihome
 
-#GoLang MQTT-InfluxDB Sync config
-INFLUXDB_BUCKET_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxx"
-INFLUXBD_URL="http://influxdb-server:8086"
-INFLUXBD_ORG=fmi
-INFLUXBD_BUCKET=fmihome
-MQTT_BROKER_URL="tcp://mqtt-server:1883"
-SUBSCRIBE_TO_TOPIC="home-01/#"
-MQTT_USER=user
-MQTT_PASSWORD=xxxxxx
-MQTT_CLIENT_ID=golang-sync-client
-
 #Postgres-Server
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=xxxxxxxxxx
 
-#Postgres homepanda
-POSTGRES_HT_HOST=localhost
-POSTGRES_HT_USER=homepanda
-POSTGRES_HT_PASSWORD=xxxxxxxxxxxxxxx
-POSTGRES_HT_DBNAME=homepanda
 ```
